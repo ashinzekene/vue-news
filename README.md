@@ -2,6 +2,14 @@
 
 > News stories at your fingertips
 
+[Check it out](https://ashinzekene.github.io/vue-news/)
+
+## Open Source 💮
+
+- Caching categories
+- Selecting categories
+- Saving news (Bookmarking)
+
 ## Build Setup
 
 ``` bash
