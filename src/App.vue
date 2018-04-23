@@ -28,14 +28,22 @@ export default {
     return {
       API_URL: 'https://newsapi.org/v2/top-headlines?country=ng&apiKey=ba09ef9453bd4b4bad5cd307ad133ef0&category=',
       results: [],
-      fetching: false
+      fetching: false,
+      loadingComponent: null
     }
   },
   components: {
     MyTabs,
     NewsArticle
   },
-  watch: {},
+  watch: {
+    fetching: function (val) {
+      val ?
+      this.loadingComponent = this.$loading.open({
+        container: null
+      }) : this.loadingComponent.close()
+    }
+  },
   methods: {
     async handleTabChange (i) {
       console.log('Recieved', i)

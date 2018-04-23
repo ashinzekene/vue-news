@@ -9,7 +9,7 @@
       <div class="media-content">
         <div class="content">
           <p>
-            <strong>{{ title }}</strong><small class="is-pulled-right">{{ new Date(date) }}</small>
+            <strong>{{ title }}</strong><small class="is-pulled-right">{{ (new Date(date)).toLocaleString() }}</small>
             <br>
             {{ content }}
           </p>
