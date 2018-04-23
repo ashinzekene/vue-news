@@ -16,19 +16,11 @@
         </div>
         <nav class="level is-mobile">
           <div class="level-left">
-            <a class="level-item" aria-label="reply">
-              <span class="icon is-small">
-                <i class="fa fa-reply" aria-hidden="true"></i>
-              </span>
-            </a>
-            <a class="level-item" aria-label="retweet">
-              <span class="icon is-small">
-                <i class="fa fa-retweet" aria-hidden="true"></i>
-              </span>
-            </a>
-            <a class="level-item" aria-label="like">
-              <span class="icon is-small">
-                <i class="fa fa-heart" aria-hidden="true"></i>
+          </div>
+          <div class="level-right">
+            <a target="_blank" class="level-item is-pulled-right" :href="link" aria-label="reply">
+              <span class="icon">
+                <i class="fa fa-external-link fa-2x" aria-hidden="true"></i>
               </span>
             </a>
           </div>

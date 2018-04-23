@@ -38,18 +38,29 @@ export default {
   },
   watch: {
     fetching: function (val) {
-      val ?
-      this.loadingComponent = this.$loading.open({
-        container: null
-      }) : this.loadingComponent.close()
+      if (val) {
+        this.loadingComponent = this.$loading.open({
+          container: null
+        })
+      } else {
+        this.loadingComponent.close()
+      }
     }
   },
   methods: {
     async handleTabChange (i) {
       console.log('Recieved', i)
       this.fetching = true
-      this.results = await fetch(this.API_URL + i)
-        .then(res => res.json())
+      try {
+        this.results = await fetch(this.API_URL + i)
+          .then(res => res.json())
+      } catch (err) {
+        this.$toast.open({
+          message: `Couldn't fetch news. Are you online?`,
+          position: 'is-bottom',
+          duration: 3000
+        })
+      }
       this.fetching = false
     }
   }
@@ -58,7 +69,7 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
