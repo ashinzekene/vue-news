@@ -3,7 +3,7 @@
     <article class="media">
       <div class="media-left">
         <figure class="image is-64x64">
-          <img :src="image" alt="Image">
+          <img :src="image || 'http://www.oneilllogistics.com/content/images/news.png'" alt="Image">
         </figure>
       </div>
       <div class="media-content">
