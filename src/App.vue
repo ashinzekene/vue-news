@@ -4,16 +4,15 @@
       <nav class='navbar' role='navigation' aria-label='main navigation'>
         <h1 class='title is-3 my-title'>Newzz</h1>
       </nav>
-      <MyTabs @tab-change='handleTabChange'></MyTabs>
+      <MyTabs :tabs='tabs' @tab-change='handleTabChange'></MyTabs>
     </div>
-    <NewsArticle v-for='(article, i) in results.articles'
+    <NewsArticle :v-if="results[activeTab]" v-for='(article, i) in results[activeTab].articles'
       v-bind:key='i'
       v-bind:title='article.title'
       v-bind:content='article.description'
       v-bind:link='article.url'
       v-bind:date='article.publishedAt'
-      v-bind:image='article.urlToImage'
-    >
+      v-bind:image='article.urlToImage'>
     </NewsArticle>
   </div>
 </template>
@@ -27,8 +26,9 @@ export default {
   data () {
     return {
       API_URL: 'https://newsapi.org/v2/top-headlines?country=ng&apiKey=ba09ef9453bd4b4bad5cd307ad133ef0&category=',
-      results: {},
+      results: [],
       fetching: false,
+      activeTab: 0,
       tabs: [
         'General',
         'Science',
@@ -61,18 +61,18 @@ export default {
         return
       } catch (err) {}
     }
-    for (let x in this.tabs) {
-      this.results[x] = []
-    }
+    this.fetchPosts(0)
   },
   methods: {
     handleTabChange (i) {
+      this.activeTab = i
       this.fetchPosts(i)
     },
-    async fetchPosts (category, page) {
-      this.fetching = true
+    async fetchPosts (categoryIndex, page) {
+      console.log('Index', categoryIndex)
+      if (!this.results[categoryIndex]) this.fetching = true
       try {
-        this.results[category] = await fetch(this.API_URL + category)
+        this.results[categoryIndex] = await fetch(this.API_URL + this.tabs[categoryIndex])
           .then(res => res.json())
         this.storeResults()
       } catch (err) {

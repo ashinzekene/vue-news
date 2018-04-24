@@ -2,7 +2,7 @@
   <div class="box article">
     <article class="media">
       <div class="media-left">
-        <figure class="image is-64x64">
+        <figure class="image is-128x128">
           <img :src="image || 'http://www.oneilllogistics.com/content/images/news.png'" alt="Image">
         </figure>
       </div>

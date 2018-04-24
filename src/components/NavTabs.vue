@@ -2,6 +2,7 @@
     <section>
         <b-tabs expanded v-model='activeTab'>
             <b-tab-item v-for='tab in tabs' :label='tab' :key='tab.id'></b-tab-item>
+            <b-tab-item label='+'></b-tab-item>
         </b-tabs>
     </section>
 </template>
@@ -9,25 +10,19 @@
 <script>
 export default {
   name: 'MyTabs',
+  props: ['tabs'],
   data () {
     return {
       activeTab: 0,
-      tabs: [
-        'General',
-        'Science',
-        'Technology',
-        'Sports',
-        'Business'
-      ],
       results: []
     }
   },
   mounted: function () {
-    this.$emit('tab-change', this.tabs[this.activeTab])
+    this.$emit('tab-change', this.activeTab)
   },
   watch: {
     activeTab: function (newVal, oldVal) {
-      this.$emit('tab-change', this.tabs[newVal])
+      newVal >= this.tabs.length -1 && this.$emit('tab-change', newVal)
     }
   }
 }
