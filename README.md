@@ -5,10 +5,15 @@
 [Check it out](https://ashinzekene.github.io/vue-news/)
 
 ## Open Source 💮
+  Contributions are welcome
+- Caching categories **done**
+- Selecting categories **+ icon**
+- Subscribing to `keywords`
+- Saving news (Bookmarking. Would need a bookmark page)
 
-- Caching categories
-- Selecting categories
-- Saving news (Bookmarking)
+### Contribution guidelinw
+- No adding of any library
+- Use preexisting ESlint
 
 ## Build Setup
 
