@@ -20,7 +20,7 @@
           <div class="level-right">
             <a target="_blank" class="level-item is-pulled-right" :href="link" aria-label="reply">
               <span class="icon">
-                <i class="fa fa-external-link fa-2x" aria-hidden="true"></i>
+                <i class="fa fa-external-link" aria-hidden="true"></i>
               </span>
             </a>
           </div>

@@ -27,8 +27,15 @@ export default {
   data () {
     return {
       API_URL: 'https://newsapi.org/v2/top-headlines?country=ng&apiKey=ba09ef9453bd4b4bad5cd307ad133ef0&category=',
-      results: [],
+      results: {},
       fetching: false,
+      tabs: [
+        'General',
+        'Science',
+        'Technology',
+        'Sports',
+        'Business'
+      ],
       loadingComponent: null
     }
   },
@@ -47,21 +54,39 @@ export default {
       }
     }
   },
+  mounted: function () {
+    if (localStorage.getItem('articles')) {
+      try {
+        this.results = JSON.parse(localStorage.getItem('articles'))
+        return
+      } catch (err) {}
+    }
+    for (let x in this.tabs) {
+      this.results[x] = []
+    }
+  },
   methods: {
-    async handleTabChange (i) {
-      console.log('Recieved', i)
+    handleTabChange (i) {
+      this.fetchPosts(i)
+    },
+    async fetchPosts (category, page) {
       this.fetching = true
       try {
-        this.results = await fetch(this.API_URL + i)
+        this.results[category] = await fetch(this.API_URL + category)
           .then(res => res.json())
+        this.storeResults()
       } catch (err) {
         this.$toast.open({
-          message: `Couldn't fetch news. Are you online?`,
+          message: `Couldn't fetch news. Are you online? 😏`,
           position: 'is-bottom',
-          duration: 3000
+          duration: 4000
         })
       }
       this.fetching = false
+    },
+    storeResults: function () {
+      localStorage.setItem('articles', JSON.stringify(this.results))
+      console.log('Successfully stored')
     }
   }
 }
