@@ -1,32 +1,25 @@
 <template>
-  <div class="box article">
-    <article class="media">
-      <div class="media-left">
-        <figure class="image is-128x128">
-          <img :src="image || 'http://www.oneilllogistics.com/content/images/news.png'" alt="Image">
-        </figure>
-      </div>
-      <div class="media-content">
-        <div class="content">
-          <p>
-            <strong>{{ title }}</strong><small class="is-pulled-right">{{ (new Date(date)).toLocaleString() }}</small>
-            <br>
-            {{ content }}
-          </p>
+  <div class="card article">
+    <div class="card-content">
+      <article class="media">
+        <div class="media-left">
+          <figure class="image is-128x128">
+            <img :src="image || 'http://www.oneilllogistics.com/content/images/news.png'" alt="Image">
+          </figure>
         </div>
-        <nav class="level is-mobile">
-          <div class="level-left">
+        <div class="media-content">
+            <p>
+              <strong>{{ title }}</strong><small class="is-pulled-right">{{ (new Date(date)).toLocaleString() }}</small>
+              <br>
+            </p>
+              {{ content }}
           </div>
-          <div class="level-right">
-            <a target="_blank" class="level-item is-pulled-right" :href="link" aria-label="reply">
-              <span class="icon">
-                <i class="fa fa-external-link" aria-hidden="true"></i>
-              </span>
-            </a>
-          </div>
-        </nav>
+        </article>
       </div>
-    </article>
+     <footer class="card-footer">
+        <a href="#" class="card-footer-item">Save</a>
+        <a :href='link' target="_blank" class="card-footer-item">Open</a>
+      </footer>
   </div>
 </template>
 
@@ -38,9 +31,10 @@ export default {
 </script>
 
 <style>
-.box.article {
+.card.article {
   max-width: 700px;
   margin: 20px auto;
+  /* padding-bottom: 0px; */
 }
 </style>
 // author:null

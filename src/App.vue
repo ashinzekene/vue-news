@@ -69,7 +69,6 @@ export default {
       this.fetchPosts(i)
     },
     async fetchPosts (categoryIndex, page) {
-      console.log('Index', categoryIndex)
       if (!this.results[categoryIndex]) this.fetching = true
       try {
         this.results[categoryIndex] = await fetch(this.API_URL + this.tabs[categoryIndex])
