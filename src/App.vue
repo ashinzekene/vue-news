@@ -6,7 +6,7 @@
       </nav>
       <MyTabs :tabs='tabs' @tab-change='handleTabChange'></MyTabs>
     </div>
-    <NewsArticle :v-if="results[activeTab]" v-for='(article, i) in results[activeTab].articles'
+    <NewsArticle v-for='(article, i) in results[activeTab].articles'
       v-bind:key='i'
       v-bind:title='article.title'
       v-bind:content='article.description'
@@ -52,6 +52,11 @@ export default {
       } else {
         this.loadingComponent.close()
       }
+    }
+  },
+  beforeMount () {
+    for (let x in this.tabs) {
+      this.results[x] = []
     }
   },
   mounted: function () {
@@ -100,7 +105,7 @@ export default {
   color: #2c3e50;
 }
 .my-navbar {
-  padding: 20px 30px 1px;
+  padding: 20px 30px 0px;
   box-shadow: 0px 0px 20px 2px rgba(100, 100, 100, 0.3);
 }
 .my-title {
