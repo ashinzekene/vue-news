@@ -4,9 +4,9 @@
       <nav class='navbar' role='navigation' aria-label='main navigation'>
         <h1 class='title is-3 my-title'>Newzz</h1>
       </nav>
-      <MyTabs :tabs='tabs' @tab-change='handleTabChange'></MyTabs>
+      <MyTabs :tabs='[...tabs, ...customTabs]' @tab-change='handleTabChange'></MyTabs>
     </div>
-    <NewsArticle v-for='(article, i) in results[activeTab].articles'
+    <NewsArticle v-if="tabs[activeTab]" v-for='(article, i) in results[activeTab].articles'
       v-bind:key='i'
       v-bind:title='article.title'
       v-bind:content='article.description'
@@ -14,6 +14,15 @@
       v-bind:date='article.publishedAt'
       v-bind:image='article.urlToImage'>
     </NewsArticle>
+    <NewsArticle v-else-if="customtabs[activeTab]" v-for='(article, i) in results[activeTab].articles'
+      v-bind:key='i'
+      v-bind:title='article.title'
+      v-bind:content='article.description'
+      v-bind:link='article.url'
+      v-bind:date='article.publishedAt'
+      v-bind:image='article.urlToImage'>
+    </NewsArticle>
+    <AddTopics v-else></AddTopics>
   </div>
 </template>
 
@@ -27,6 +36,7 @@ export default {
     return {
       API_URL: 'https://newsapi.org/v2/top-headlines?country=ng&apiKey=ba09ef9453bd4b4bad5cd307ad133ef0&category=',
       results: [],
+      customResults: [],
       fetching: false,
       activeTab: 0,
       tabs: [
@@ -36,6 +46,7 @@ export default {
         'Sports',
         'Business'
       ],
+      customTabs: [],
       loadingComponent: null
     }
   },
@@ -69,12 +80,20 @@ export default {
     this.fetchPosts(0)
   },
   methods: {
-    handleTabChange (i) {
-      this.activeTab = i
-      this.fetchPosts(i)
+    handleTabChange (text) {
+      // this.activeTab =
+      // It is a normal tab
+      if (this.tabs.includes(text)) {
+        this.activeTab = this.tabs.findIndex(tab => tab === text)
+        this.fetchPosts(this.activeTab)
+      } else if (this.customTabs.includes(text)) {
+        this.activeTab = this.tabs.findIndex(tab => tab === text)
+      } else {
+        console.log('Clicked on + button')
+      }
     },
     async fetchPosts (categoryIndex, page) {
-      if (!this.results[categoryIndex]) this.fetching = true
+      if (!this.results[categoryIndex].articles) this.fetching = true
       try {
         this.results[categoryIndex] = await fetch(this.API_URL + this.tabs[categoryIndex])
           .then(res => res.json())

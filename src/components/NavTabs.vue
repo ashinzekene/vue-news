@@ -22,14 +22,14 @@ export default {
   },
   watch: {
     activeTab: function (newVal, oldVal) {
-      newVal <= this.tabs.length - 1 && this.$emit('tab-change', newVal)
+      this.$emit('tab-change', this.tabs[newVal])
     }
   }
 }
 </script>
 
 <style>
-.b-tabs .tab-content {
+.b-tabs section.tab-content {
   padding: 0
 }
 </style>

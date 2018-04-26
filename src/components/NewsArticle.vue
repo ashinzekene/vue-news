@@ -36,6 +36,9 @@ export default {
   margin: 20px auto;
   /* padding-bottom: 0px; */
 }
+.card-content {
+  overflow: hidden;
+}
 </style>
 // author:null
 // description:"Red spots suggest Mercury may have formed far away from the sun."
