@@ -2,24 +2,18 @@
   <div id='app'>
     <div class='my-navbar'>
       <nav class='navbar' role='navigation' aria-label='main navigation'>
-        <h1 class='title is-3 my-title'>Newzz</h1>
-        <div class="navbar-menu">
+        <div class="navbar-brand">
+          <h1 class='title is-3 my-title'>Newzz</h1>
+        </div>
+        <div class="navbar-menu is-active">
           <div class="navbar-end">
-            <button class="is-button is-primary is-medium">+</button>
+            <b-icon icon="add"></b-icon>
           </div>
         </div>
       </nav>
-      <MyTabs :tabs='[...tabs, ...customTabs]' @tab-change='handleTabChange'></MyTabs>
+      <MyTabs :tabs='tabs' @tab-change='handleTabChange'></MyTabs>
     </div>
     <NewsArticle v-if="type === 'normal'" v-for='(article, i) in results[activeTab].articles'
-      v-bind:key='i'
-      v-bind:title='article.title'
-      v-bind:content='article.description'
-      v-bind:link='article.url'
-      v-bind:date='article.publishedAt'
-      v-bind:image='article.urlToImage'>
-    </NewsArticle>
-    <NewsArticle v-else-if="type === 'custom'" v-for='(article, i) in customResults[activeTab].articles'
       v-bind:key='i'
       v-bind:title='article.title'
       v-bind:content='article.description'
@@ -41,22 +35,19 @@ export default {
   data () {
     return {
       API_URL: 'https://newsapi.org/v2/top-headlines?country=ng&apiKey=ba09ef9453bd4b4bad5cd307ad133ef0&category=',
-      EVERYTHING: 'https://newsapi.org/v2/everything?q=bitcoin&apiKey=API_KEY',
+      CUSTOM: 'https://newsapi.org/v2/everything?apiKey=ba09ef9453bd4b4bad5cd307ad133ef0&q=',
       results: [],
-      customResults: [],
       fetching: false,
       activeTab: 0,
       type: 'normal',
       tabs: [
-        'General',
-        'Science',
-        'Technology',
-        'Sports',
-        'Business'
-      ],
-      customTabs: [
-        'Angular',
-        'JavaScript'
+        {type: 'normal', text: 'General', icon: 'newspaper'},
+        {type: 'normal', text: 'Science', icon: 'microscope'},
+        {type: 'normal', text: 'Technology', icon: 'newspaper'},
+        {type: 'normal', text: 'Sports', icon: 'football'},
+        {type: 'normal', text: 'Business', icon: 'newspaper'},
+        {type: 'custom', text: 'Angular', icon: 'angular'},
+        {type: 'custom', text: 'JavaScript', icon: 'JavaScript'}
       ],
       loadingComponent: null
     }
@@ -79,13 +70,15 @@ export default {
   },
   beforeMount () {
     for (let x in this.tabs) {
-      this.results[x] = []
+      this.results[x] = {}
     }
   },
   mounted: function () {
     if (localStorage.getItem('articles')) {
       try {
-        this.results = JSON.parse(localStorage.getItem('articles'))
+        JSON.parse(localStorage.getItem('articles')).forEach((item, i) => {
+          this.results[i] = item
+        })
         return
       } catch (err) {}
     }
@@ -98,27 +91,24 @@ export default {
     removeTag (i) {
       this.customTabs = this.customTabs.filter((tag, ind) => ind !== i)
     },
-    handleTabChange (text) {
+    handleTabChange (i) {
       // this.activeTab =
       // It is a normal tab
-      if (this.tabs.includes(text)) {
-        this.activeTab = this.tabs.findIndex(tab => tab === text)
-        this.fetchPosts(this.activeTab)
-        this.type = 'normal'
-      } else if (this.customTabs.includes(text)) {
-        this.activeTab = this.tabs.findIndex(tab => tab === text)
-        this.type = 'custom'
+      let { type } = this.tabs.find((tab, ind) => ind === i)
+      this.type = type
+      this.activeTab = i
+      if (type === 'normal') {
+        this.fetchPosts(i)
       } else {
-        this.type = '+'
-        console.log('Clicked on + button')
+        this.fetchCustom(i)
       }
     },
-    async fetchCustom (text, page) {
+    async fetchCustom (index, page) {
       try {
-        let res = await fetch(this.API_URL).then(res => res.json())
+        this.results[index] = await fetch(this.CUSTOM + this.tabs[index].text).then(res => res.json())
       } catch (err) {
         this.$toast.open({
-          message: `Couldn't fetch news. Are you online? 😏`,
+          message: `Couldn't fetch ${this.tabs[index].text} stories. Are you online? 😏`,
           position: 'is-bottom',
           duration: 4000
         })
@@ -127,7 +117,7 @@ export default {
     async fetchPosts (categoryIndex, page) {
       if (!this.results[categoryIndex].articles) this.fetching = true
       try {
-        this.results[categoryIndex] = await fetch(this.API_URL + this.tabs[categoryIndex])
+        this.results[categoryIndex] = await fetch(this.API_URL + this.tabs[categoryIndex].text)
           .then(res => res.json())
         this.storeResults()
       } catch (err) {

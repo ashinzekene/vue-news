@@ -1,7 +1,7 @@
 <template>
     <section>
         <b-tabs expanded v-model='activeTab'>
-            <b-tab-item v-for='tab in tabs' :label='tab' :key='tab.id'></b-tab-item>
+            <b-tab-item v-for='tab in tabs' :label='tab.text' :icon='tab.icon' :key='tab.id'></b-tab-item>
         </b-tabs>
     </section>
 </template>
@@ -21,7 +21,7 @@ export default {
   },
   watch: {
     activeTab: function (newVal, oldVal) {
-      this.$emit('tab-change', this.tabs[newVal])
+      this.$emit('tab-change', newVal)
     }
   }
 }
