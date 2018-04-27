@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     addNewTags () {
-      this.$emit('add-new-tags', [...this.newTags, ...this.tags].map(text => ({ type: 'custom', icon: '', text })))
+      this.$emit('add-new-tags', [...this.newTags, ...this.tags].map(text => ({ type: 'custom', icon: 'bookmark', text })))
       this.newTags = []
     },
     removeTag (tag) {

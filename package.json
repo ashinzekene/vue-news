@@ -10,7 +10,7 @@
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",
-    "predeploy": "node config/script",
+    "predeploy": "npm run build && node config/script",
     "deploy": "gh-pages -d dist",
     "build": "node build/build.js"
   },

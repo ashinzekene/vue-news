@@ -37,13 +37,13 @@ export default {
       activeTab: 0,
       type: 'normal',
       tabs: [
-        {type: 'normal', text: 'General', icon: 'newspaper'},
-        {type: 'normal', text: 'Science', icon: 'microscope'},
-        {type: 'normal', text: 'Technology', icon: 'newspaper'},
-        {type: 'normal', text: 'Sports', icon: 'football'},
-        {type: 'normal', text: 'Business', icon: 'newspaper'},
-        {type: 'custom', text: 'Angular', icon: 'angular'},
-        {type: 'custom', text: 'JavaScript', icon: 'JavaScript'}
+        {type: 'normal', text: 'General', icon: 'bell'},
+        {type: 'normal', text: 'Science', icon: 'flask'},
+        {type: 'normal', text: 'Technology', icon: 'rocket'},
+        {type: 'normal', text: 'Sports', icon: 'bookmark'},
+        {type: 'normal', text: 'Business', icon: 'briefcase'},
+        {type: 'custom', text: 'Angular', icon: 'bookmark'},
+        {type: 'custom', text: 'JavaScript', icon: 'bookmark'}
       ],
       loadingComponent: null
     }
