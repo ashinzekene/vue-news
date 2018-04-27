@@ -2,7 +2,6 @@
     <section>
         <b-tabs expanded v-model='activeTab'>
             <b-tab-item v-for='tab in tabs' :label='tab' :key='tab.id'></b-tab-item>
-            <b-tab-item label='+'></b-tab-item>
         </b-tabs>
     </section>
 </template>
@@ -10,7 +9,7 @@
 <script>
 export default {
   name: 'MyTabs',
-  props: ['tabs'],
+  props: ['tabs', 'customTabs'],
   data () {
     return {
       activeTab: 0,

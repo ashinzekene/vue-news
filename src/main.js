@@ -6,7 +6,7 @@ import Buefy from 'buefy'
 import 'buefy/lib/buefy.css'
 
 Vue.use(Buefy, {
-  defaultIconPack: 'fa',
+  defaultIconPack: 'fa'
 })
 Vue.config.productionTip = false
 

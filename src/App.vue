@@ -3,6 +3,11 @@
     <div class='my-navbar'>
       <nav class='navbar' role='navigation' aria-label='main navigation'>
         <h1 class='title is-3 my-title'>Newzz</h1>
+        <div class="navbar-menu">
+          <div class="navbar-end">
+            <button class="is-button is-primary is-medium">+</button>
+          </div>
+        </div>
       </nav>
       <MyTabs :tabs='[...tabs, ...customTabs]' @tab-change='handleTabChange'></MyTabs>
     </div>
@@ -14,7 +19,7 @@
       v-bind:date='article.publishedAt'
       v-bind:image='article.urlToImage'>
     </NewsArticle>
-    <NewsArticle v-else-if="type === 'custom'" v-for='(article, i) in results[activeTab].articles'
+    <NewsArticle v-else-if="type === 'custom'" v-for='(article, i) in customResults[activeTab].articles'
       v-bind:key='i'
       v-bind:title='article.title'
       v-bind:content='article.description'
@@ -22,7 +27,7 @@
       v-bind:date='article.publishedAt'
       v-bind:image='article.urlToImage'>
     </NewsArticle>
-    <AddTopics :tags="customTabs" v-if="type === '+'"></AddTopics>
+    <AddTopics @add-new-tags="addNewTags" @remove-tag="removeTag" :tags="customTabs" v-if="type === '+'"></AddTopics>
   </div>
 </template>
 
@@ -36,6 +41,7 @@ export default {
   data () {
     return {
       API_URL: 'https://newsapi.org/v2/top-headlines?country=ng&apiKey=ba09ef9453bd4b4bad5cd307ad133ef0&category=',
+      EVERYTHING: 'https://newsapi.org/v2/everything?q=bitcoin&apiKey=API_KEY',
       results: [],
       customResults: [],
       fetching: false,
@@ -49,8 +55,8 @@ export default {
         'Business'
       ],
       customTabs: [
-        "Angular",
-        "JavaScript"
+        'Angular',
+        'JavaScript'
       ],
       loadingComponent: null
     }
@@ -86,6 +92,12 @@ export default {
     this.fetchPosts(0)
   },
   methods: {
+    addNewTags (newTags) {
+      this.customTabs = newTags
+    },
+    removeTag (i) {
+      this.customTabs = this.customTabs.filter((tag, ind) => ind !== i)
+    },
     handleTabChange (text) {
       // this.activeTab =
       // It is a normal tab

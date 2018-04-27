@@ -9,7 +9,7 @@
           type="is-primary">
         </b-taginput>
         <p class="control">
-          <button class="button is-primary">Add To Topics</button>
+          <button class="button is-primary" @click="addNewTags">Add To Topics</button>
         </p>
     </b-field>
     <div class="tags">
@@ -34,10 +34,14 @@ export default {
       newTags: []
     }
   },
-  mounted: function () {
-
-  },
-  watch: {
+  methods: {
+    addNewTags () {
+      this.$emit('add-new-tags', [...this.tags, ...this.newTags])
+      this.newTags = []
+    },
+    removeTag (i) {
+      this.$emit('remove-tag', i)
+    }
   }
 }
 </script>
