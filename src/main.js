@@ -5,7 +5,9 @@ import App from './App'
 import Buefy from 'buefy'
 import 'buefy/lib/buefy.css'
 
-Vue.use(Buefy)
+Vue.use(Buefy, {
+  defaultIconPack: 'fa',
+})
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

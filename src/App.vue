@@ -6,7 +6,7 @@
       </nav>
       <MyTabs :tabs='[...tabs, ...customTabs]' @tab-change='handleTabChange'></MyTabs>
     </div>
-    <NewsArticle v-if="tabs[activeTab]" v-for='(article, i) in results[activeTab].articles'
+    <NewsArticle v-if="type === 'normal'" v-for='(article, i) in results[activeTab].articles'
       v-bind:key='i'
       v-bind:title='article.title'
       v-bind:content='article.description'
@@ -14,7 +14,7 @@
       v-bind:date='article.publishedAt'
       v-bind:image='article.urlToImage'>
     </NewsArticle>
-    <NewsArticle v-else-if="customtabs[activeTab]" v-for='(article, i) in results[activeTab].articles'
+    <NewsArticle v-else-if="type === 'custom'" v-for='(article, i) in results[activeTab].articles'
       v-bind:key='i'
       v-bind:title='article.title'
       v-bind:content='article.description'
@@ -22,13 +22,14 @@
       v-bind:date='article.publishedAt'
       v-bind:image='article.urlToImage'>
     </NewsArticle>
-    <AddTopics v-else></AddTopics>
+    <AddTopics :tags="customTabs" v-if="type === '+'"></AddTopics>
   </div>
 </template>
 
 <script>
 import MyTabs from '@/components/NavTabs'
 import NewsArticle from '@/components/NewsArticle'
+import AddTopics from '@/components/AddTopics'
 
 export default {
   name: 'App',
@@ -39,6 +40,7 @@ export default {
       customResults: [],
       fetching: false,
       activeTab: 0,
+      type: 'normal',
       tabs: [
         'General',
         'Science',
@@ -46,13 +48,17 @@ export default {
         'Sports',
         'Business'
       ],
-      customTabs: [],
+      customTabs: [
+        "Angular",
+        "JavaScript"
+      ],
       loadingComponent: null
     }
   },
   components: {
     MyTabs,
-    NewsArticle
+    NewsArticle,
+    AddTopics
   },
   watch: {
     fetching: function (val) {
@@ -86,10 +92,24 @@ export default {
       if (this.tabs.includes(text)) {
         this.activeTab = this.tabs.findIndex(tab => tab === text)
         this.fetchPosts(this.activeTab)
+        this.type = 'normal'
       } else if (this.customTabs.includes(text)) {
         this.activeTab = this.tabs.findIndex(tab => tab === text)
+        this.type = 'custom'
       } else {
+        this.type = '+'
         console.log('Clicked on + button')
+      }
+    },
+    async fetchCustom (text, page) {
+      try {
+        let res = await fetch(this.API_URL).then(res => res.json())
+      } catch (err) {
+        this.$toast.open({
+          message: `Couldn't fetch news. Are you online? 😏`,
+          position: 'is-bottom',
+          duration: 4000
+        })
       }
     },
     async fetchPosts (categoryIndex, page) {
