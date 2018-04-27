@@ -10,14 +10,16 @@
       <MyTabs :tabs='tabs' @tab-change='handleTabChange'></MyTabs>
     </div>
     <AddTopics @add-new-tags="addNewTags" @remove-tag="removeTag" :tags="tabs.filter(({type}) => type == 'custom').map(({ text }) => text)" v-if="type === '+'"></AddTopics>
-    <NewsArticle v-else v-for='(article, i) in results[activeTab].articles'
-      v-bind:key='i'
-      v-bind:title='article.title'
-      v-bind:content='article.description'
-      v-bind:link='article.url'
-      v-bind:date='article.publishedAt'
-      v-bind:image='article.urlToImage'>
-    </NewsArticle>
+    <div v-else class="articles">
+      <NewsArticle v-for='(article, i) in results[activeTab].articles'
+        v-bind:key='i'
+        v-bind:title='article.title'
+        v-bind:content='article.description'
+        v-bind:link='article.url'
+        v-bind:date='article.publishedAt'
+        v-bind:image='article.urlToImage'>
+      </NewsArticle>
+    </div>
   </div>
 </template>
 
@@ -41,9 +43,9 @@ export default {
         {type: 'normal', text: 'Science', icon: 'flask'},
         {type: 'normal', text: 'Technology', icon: 'rocket'},
         {type: 'normal', text: 'Sports', icon: 'bookmark'},
-        {type: 'normal', text: 'Business', icon: 'briefcase'},
-        {type: 'custom', text: 'Angular', icon: 'bookmark'},
-        {type: 'custom', text: 'JavaScript', icon: 'bookmark'}
+        {type: 'normal', text: 'Business', icon: 'briefcase'}
+        // {type: 'custom', text: 'Angular', icon: 'bookmark'},
+        // {type: 'custom', text: 'JavaScript', icon: 'bookmark'}
       ],
       loadingComponent: null
     }
@@ -57,7 +59,7 @@ export default {
     fetching: function (val) {
       if (val) {
         this.loadingComponent = this.$loading.open({
-          container: null
+          container: document.querySelector()
         })
       } else {
         this.loadingComponent.close()
@@ -78,7 +80,8 @@ export default {
         return
       } catch (err) {}
     }
-    this.fetchPosts(0)
+    // this.fetchPosts(0)
+    console.log(this.tags)
   },
   methods: {
     addNewTags (newTags) {
@@ -86,7 +89,10 @@ export default {
       this.tabs = [...this.tabs.filter(({ type }) => type === 'normal'), ...newTags]
     },
     removeTag (tag) {
+      let index = this.tabs.findIndex(({ text }) => text === tag)
       this.tabs = this.tabs.filter(({ text }) => text !== tag)
+      this.results.filter((res, i) => i !== index)
+      this.storeResults()
     },
     handleTabChange (i) {
       let { type } = this.tabs.find((tab, ind) => ind === i)
@@ -98,7 +104,7 @@ export default {
         this.fetchCustom(i)
       }
     },
-    async fetchCustom (index, page) {
+    async fetchCustom (index) {
       try {
         this.results[index] = await fetch(this.CUSTOM + this.tabs[index].text).then(res => res.json())
       } catch (err) {
@@ -109,7 +115,8 @@ export default {
         })
       }
     },
-    async fetchPosts (categoryIndex, page) {
+    async fetchPosts (categoryIndex) {
+      console.log(`Fetching post for ${this.tabs[categoryIndex].text}`, Array.from(this.results))
       if (!this.results[categoryIndex].articles) this.fetching = true
       try {
         this.results[categoryIndex] = await fetch(this.API_URL + this.tabs[categoryIndex].text)
@@ -126,7 +133,6 @@ export default {
     },
     storeResults: function () {
       localStorage.setItem('articles', JSON.stringify(this.results))
-      console.log('Successfully stored')
     }
   }
 }
