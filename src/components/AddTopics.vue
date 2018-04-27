@@ -17,7 +17,7 @@
         <b-tag v-for="(tag, i) in tags" :key="i"
           type="is-primary is-medium"
           closable
-          @close="removeTag(i)">
+          @close="removeTag(tag)">
           {{ tag }}
         </b-tag>
       </div>
@@ -36,11 +36,11 @@ export default {
   },
   methods: {
     addNewTags () {
-      this.$emit('add-new-tags', [...this.tags, ...this.newTags])
+      this.$emit('add-new-tags', [...this.newTags, ...this.tags].map(text => ({ type: 'custom', icon: '', text })))
       this.newTags = []
     },
-    removeTag (i) {
-      this.$emit('remove-tag', i)
+    removeTag (tag) {
+      this.$emit('remove-tag', tag)
     }
   }
 }
@@ -48,7 +48,7 @@ export default {
 
 <style>
 .b-tabs section.tab-content {
-  padding: 0
+  padding: 0;
 }
 section.add-topics {
   padding: 20px 30px;

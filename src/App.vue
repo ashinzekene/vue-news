@@ -2,18 +2,15 @@
   <div id='app'>
     <div class='my-navbar'>
       <nav class='navbar' role='navigation' aria-label='main navigation'>
-        <div class="navbar-brand">
-          <h1 class='title is-3 my-title'>Newzz</h1>
-        </div>
-        <div class="navbar-menu is-active">
-          <div class="navbar-end">
-            <b-icon icon="add"></b-icon>
-          </div>
+        <h1 class='title is-3 my-title'>Newzz</h1>
+        <div @click="() => type = '+'">
+          <b-icon icon="plus"></b-icon>
         </div>
       </nav>
       <MyTabs :tabs='tabs' @tab-change='handleTabChange'></MyTabs>
     </div>
-    <NewsArticle v-if="type === 'normal'" v-for='(article, i) in results[activeTab].articles'
+    <AddTopics @add-new-tags="addNewTags" @remove-tag="removeTag" :tags="tabs.filter(({type}) => type == 'custom').map(({ text }) => text)" v-if="type === '+'"></AddTopics>
+    <NewsArticle v-else v-for='(article, i) in results[activeTab].articles'
       v-bind:key='i'
       v-bind:title='article.title'
       v-bind:content='article.description'
@@ -21,7 +18,6 @@
       v-bind:date='article.publishedAt'
       v-bind:image='article.urlToImage'>
     </NewsArticle>
-    <AddTopics @add-new-tags="addNewTags" @remove-tag="removeTag" :tags="customTabs" v-if="type === '+'"></AddTopics>
   </div>
 </template>
 
@@ -86,14 +82,13 @@ export default {
   },
   methods: {
     addNewTags (newTags) {
-      this.customTabs = newTags
+      console.log(newTags)
+      this.tabs = [...this.tabs.filter(({ type }) => type === 'normal'), ...newTags]
     },
-    removeTag (i) {
-      this.customTabs = this.customTabs.filter((tag, ind) => ind !== i)
+    removeTag (tag) {
+      this.tabs = this.tabs.filter(({ text }) => text !== tag)
     },
     handleTabChange (i) {
-      // this.activeTab =
-      // It is a normal tab
       let { type } = this.tabs.find((tab, ind) => ind === i)
       this.type = type
       this.activeTab = i
@@ -149,8 +144,12 @@ export default {
   padding: 20px 30px 0px;
   box-shadow: 0px 0px 20px 2px rgba(100, 100, 100, 0.3);
 }
+.my-navbar > .navbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 .my-title {
-  width: 100%;
   text-align: left;
 }
 </style>
