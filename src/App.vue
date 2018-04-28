@@ -44,8 +44,6 @@ export default {
         {type: 'normal', text: 'Technology', icon: 'rocket'},
         {type: 'normal', text: 'Sports', icon: 'bookmark'},
         {type: 'normal', text: 'Business', icon: 'briefcase'}
-        // {type: 'custom', text: 'Angular', icon: 'bookmark'},
-        // {type: 'custom', text: 'JavaScript', icon: 'bookmark'}
       ],
       loadingComponent: null
     }
@@ -59,7 +57,7 @@ export default {
     fetching: function (val) {
       if (val) {
         this.loadingComponent = this.$loading.open({
-          container: document.querySelector()
+          container: document.querySelector('.articles')
         })
       } else {
         this.loadingComponent.close()
@@ -77,11 +75,8 @@ export default {
         JSON.parse(localStorage.getItem('articles')).forEach((item, i) => {
           this.results[i] = item
         })
-        return
       } catch (err) {}
     }
-    // this.fetchPosts(0)
-    console.log(this.tags)
   },
   methods: {
     addNewTags (newTags) {
@@ -116,7 +111,6 @@ export default {
       }
     },
     async fetchPosts (categoryIndex) {
-      console.log(`Fetching post for ${this.tabs[categoryIndex].text}`, Array.from(this.results))
       if (!this.results[categoryIndex].articles) this.fetching = true
       try {
         this.results[categoryIndex] = await fetch(this.API_URL + this.tabs[categoryIndex].text)
