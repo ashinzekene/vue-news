@@ -17,8 +17,14 @@
         </article>
       </div>
      <footer class="card-footer">
-        <a href="#" class="card-footer-item">Save</a>
-        <a :href='link' target="_blank" class="card-footer-item">Open</a>
+        <a href="#" class="card-footer-item">
+          <b-icon pack="fa" icon="bookmark-o"></b-icon>&nbsp;
+          Save
+        </a>
+        <a :href='link' target="_blank" class="card-footer-item">
+          <b-icon pack="fa" icon="external-link"></b-icon>&nbsp;
+          Open
+        </a>
       </footer>
   </div>
 </template>

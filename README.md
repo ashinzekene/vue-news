@@ -8,7 +8,7 @@
   Contributions are welcome
 - Caching categories **done**
 - Selecting categories **+ icon**
-- Subscribing to `keywords`
+- Subscribing to `keywords` **done**
 - Saving news (Bookmarking. Would need a bookmark page)
 
 ### Contribution guidelinw
