@@ -19,6 +19,7 @@
         v-bind:date='article.publishedAt'
         v-bind:image='article.urlToImage'>
       </NewsArticle>
+      <b-loading :is-full-page="false" :active.sync="fetching" :canCancel="true"></b-loading>
     </div>
   </div>
 </template>
@@ -59,32 +60,19 @@ export default {
     }
   },
   watch: {
-    fetching: function (val) {
-      if (val) {
-        this.loadingComponent = this.$loading.open({
-          container: document.querySelector('.articles')
-        })
-      } else {
-        this.loadingComponent.close()
-      }
-    },
-    results: function (old, newVal) {
-      console.log('REsuLt CHaNgeD')
-      console.table(old, newVal)
+    tabs: function (old, newVal) {
+      // SAVE YOUR PREFERENCES ON 'TAB' CHNAGE
+      localStorage.setItem('tabs', JSON.stringify(this.tabs))
     }
   },
   beforeMount () {
+    if (localStorage.getItem('tabs')) {
+      try {
+        this.tabs = JSON.parse(localStorage.getItem('tabs'))
+      } catch (err) {}
+    }
     for (let x in this.tabs) {
       this.results[x] = {}
-    }
-  },
-  mounted: function () {
-    if (localStorage.getItem('articles')) {
-      try {
-        JSON.parse(localStorage.getItem('articles')).forEach((item, i) => {
-          this.results[i] = item
-        })
-      } catch (err) {}
     }
   },
   methods: {
@@ -107,8 +95,13 @@ export default {
       }
     },
     async fetchCustom (index) {
+      if (!this.results[index].articles) this.fetching = true
       try {
-        this.results[index] = await fetch(this.CUSTOM + this.tabs[index].text).then(res => res.json())
+        var result = await fetch(this.CUSTOM + this.tabs[index].text).then(res => res.json())
+        this.results = this.results.map((res, i) => {
+          return i === index
+            ? result : res
+        })
       } catch (err) {
         this.$toast.open({
           message: `Couldn't fetch ${this.tabs[index].text} stories. Are you online? 😏`,
@@ -116,14 +109,15 @@ export default {
           duration: 4000
         })
       }
+      this.fetching = false
     },
-    async fetchPosts (categoryIndex) {
-      if (!this.results[categoryIndex].articles) this.fetching = true
+    async fetchPosts (index) {
+      if (!this.results[index].articles) this.fetching = true
       try {
-        var result = await fetch(this.API_URL + this.tabs[categoryIndex].text)
+        var result = await fetch(this.API_URL + this.tabs[index].text)
           .then(res => res.json())
         this.results = this.results.map((res, i) => {
-          return i === categoryIndex
+          return i === index
             ? result : res
         })
       } catch (err) {
