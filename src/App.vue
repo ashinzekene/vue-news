@@ -11,7 +11,7 @@
     </div>
     <AddTopics @add-new-tags="addNewTags" @remove-tag="removeTag" :tags="tabs.filter(({type}) => type == 'custom').map(({ text }) => text)" v-if="type === '+'"></AddTopics>
     <div v-else class="articles">
-      <NewsArticle v-for='(article, i) in results[activeTab].articles'
+      <NewsArticle v-for='(article, i) in activeArticles'
         v-bind:key='i'
         v-bind:title='article.title'
         v-bind:content='article.description'
@@ -53,6 +53,11 @@ export default {
     NewsArticle,
     AddTopics
   },
+  computed: {
+    activeArticles: function () {
+      return this.results[this.activeTab] ? this.results[this.activeTab].articles : []
+    }
+  },
   watch: {
     fetching: function (val) {
       if (val) {
@@ -62,6 +67,10 @@ export default {
       } else {
         this.loadingComponent.close()
       }
+    },
+    results: function (old, newVal) {
+      console.log('REsuLt CHaNgeD')
+      console.table(old, newVal)
     }
   },
   beforeMount () {
@@ -80,14 +89,12 @@ export default {
   },
   methods: {
     addNewTags (newTags) {
-      console.log(newTags)
       this.tabs = [...this.tabs.filter(({ type }) => type === 'normal'), ...newTags]
     },
     removeTag (tag) {
       let index = this.tabs.findIndex(({ text }) => text === tag)
       this.tabs = this.tabs.filter(({ text }) => text !== tag)
       this.results.filter((res, i) => i !== index)
-      this.storeResults()
     },
     handleTabChange (i) {
       let { type } = this.tabs.find((tab, ind) => ind === i)
@@ -113,9 +120,12 @@ export default {
     async fetchPosts (categoryIndex) {
       if (!this.results[categoryIndex].articles) this.fetching = true
       try {
-        this.results[categoryIndex] = await fetch(this.API_URL + this.tabs[categoryIndex].text)
+        var result = await fetch(this.API_URL + this.tabs[categoryIndex].text)
           .then(res => res.json())
-        this.storeResults()
+        this.results = this.results.map((res, i) => {
+          return i === categoryIndex
+            ? result : res
+        })
       } catch (err) {
         this.$toast.open({
           message: `Couldn't fetch news. Are you online? 😏`,
@@ -124,9 +134,6 @@ export default {
         })
       }
       this.fetching = false
-    },
-    storeResults: function () {
-      localStorage.setItem('articles', JSON.stringify(this.results))
     }
   }
 }
