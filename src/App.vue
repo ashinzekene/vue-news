@@ -77,7 +77,13 @@ export default {
   },
   methods: {
     addNewTags (newTags) {
+      console.log('New tabs', newTags)
       this.tabs = [...this.tabs.filter(({ type }) => type === 'normal'), ...newTags]
+      let x = 0
+      while (x < this.tabs.length) {
+        if (!this.results[x]) this.results.push({})
+        x++
+      }
     },
     removeTag (tag) {
       let index = this.tabs.findIndex(({ text }) => text === tag)
