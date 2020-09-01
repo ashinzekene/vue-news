@@ -15,7 +15,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "buefy": "^0.6.5",
+    "buefy": "^0.7.2",
     "gh-pages": "^1.1.0",
     "vue": "^2.5.2"
   },
